@@ -5,6 +5,8 @@ from django.db.models import Q, Sum, Count
 from .models import Product, Order, OrderItem
 from .forms import OrderForm, ContactForm
 from .cart import Cart
+from django.http import HttpResponse
+from django.utils import timezone
 
 def index(request):
     """Página de inicio"""
@@ -164,53 +166,67 @@ def remove_from_cart(request, product_id):
     return redirect('cart_detail')
 
 def update_cart(request, product_id):
-    """Actualizar cantidad de producto en el carrito"""
+    """Actualizar cantidad de producto en el carrito - VERSIÓN DEFINITIVA"""
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     
     print(f"🔄 Actualizando carrito - Producto: {product.name}, ID: {product_id}")
     
-    # Obtener la cantidad del formulario
-    quantity = request.POST.get('quantity')
-    print(f"📦 Cantidad recibida: {quantity}")
+    # DEBUG: Mostrar todos los datos del request
+    print("📋 DATOS DEL REQUEST:")
+    print(f"   POST: {dict(request.POST)}")
+    print(f"   GET: {dict(request.GET)}")
+    print(f"   META: {request.META.get('REQUEST_METHOD')}")
     
-    # Validar que quantity no sea None y sea un número válido
-    if quantity is None:
-        print("❌ Cantidad es None")
-        messages.error(request, 'Cantidad no válida.')
+    # Obtener la cantidad de MÚLTIPLES FUENTES
+    quantity = None
+    
+    # 1. Intentar desde POST (formulario normal)
+    quantity = request.POST.get('quantity')
+    print(f"📦 Cantidad desde POST: '{quantity}'")
+    
+    # 2. Intentar desde GET (fallback)
+    if quantity is None or quantity == '':
+        quantity = request.GET.get('quantity')
+        print(f"📦 Cantidad desde GET: '{quantity}'")
+    
+    # 3. Si todavía no hay cantidad, mostrar error
+    if quantity is None or quantity == '':
+        print("❌ CRÍTICO: No se recibió cantidad")
+        messages.error(request, 'Error: No se recibió la cantidad. Intenta nuevamente.')
         return redirect('cart_detail')
     
+    # CONVERTIR A ENTERO
     try:
         quantity = int(quantity)
         print(f"✅ Cantidad convertida a int: {quantity}")
     except (ValueError, TypeError) as e:
-        print(f"❌ Error convirtiendo cantidad: {e}")
-        messages.error(request, 'Cantidad no válida.')
+        print(f"❌ Error convirtiendo cantidad '{quantity}': {e}")
+        messages.error(request, f'Cantidad no válida: "{quantity}"')
         return redirect('cart_detail')
     
-    # Validar que no exceda el stock
+    # VALIDACIONES DE STOCK
     if quantity > product.stock:
         print(f"⚠️  Cantidad excede stock: {quantity} > {product.stock}")
-        messages.error(request, f'No puedes agregar más de {product.stock} unidades de "{product.name}".')
+        messages.warning(request, f'No hay suficiente stock. Máximo disponible: {product.stock} unidades.')
         quantity = product.stock
     elif quantity < 1:
         print(f"⚠️  Cantidad menor a 1: {quantity}")
-        messages.error(request, 'La cantidad debe ser al menos 1.')
+        messages.warning(request, 'La cantidad mínima es 1.')
         quantity = 1
-    else:
-        print(f"✅ Cantidad válida: {quantity}")
     
-    # Actualizar o remover del carrito
-    if quantity > 0:
-        print(f"🛒 Actualizando cantidad a: {quantity}")
-        cart.add(product, quantity, update_quantity=True)
-        messages.success(request, f'Cantidad de "{product.name}" actualizada a {quantity}.')
-    else:
-        print("🗑️  Removiendo producto del carrito")
-        cart.remove(product)
-        messages.success(request, f'"{product.name}" removido del carrito.')
+    print(f"🛒 Cantidad final para actualizar: {quantity}")
     
-    print("✅ Carrito actualizado correctamente")
+    # ACTUALIZAR CARRITO
+    cart.add(product, quantity, update_quantity=True)
+    
+    # MENSAJE DE ÉXITO
+    if quantity == 1:
+        messages.success(request, f'"{product.name}" actualizado a 1 unidad.')
+    else:
+        messages.success(request, f'"{product.name}" actualizado a {quantity} unidades.')
+    
+    print("✅ Carrito actualizado exitosamente")
     return redirect('cart_detail')
 
 def clear_cart(request):

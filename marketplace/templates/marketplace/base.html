@@ -47,7 +47,7 @@
                 
                 <div class="navbar-search">
                     <form class="d-flex" method="GET" action="{% url 'product_list' %}">
-                        <input class="form-control me-2" type="search" name="q" 
+                        <input class="form-control" type="search" name="q" 
                                placeholder="Buscar productos..." value="{{ request.GET.q }}"
                                aria-label="Buscar productos">
                         <button class="btn btn-search" type="submit">
@@ -60,6 +60,11 @@
                     <a href="#" class="nav-icon">
                         <i class="fas fa-user"></i>
                         <span>Mi Cuenta</span>
+                    </a>
+                    <!-- AGREGADO: CHAT DE SOPORTE -->
+                    <a href="{% url 'chat' %}" class="nav-icon">
+                        <i class="fas fa-headset"></i>
+                        <span>Soporte</span>
                     </a>
                     <a href="{% url 'cart_detail' %}" class="nav-icon">
                         <i class="fas fa-shopping-cart"></i>
@@ -101,6 +106,7 @@
                     </li>
                     
                     <li class="nav-item"><a href="{% url 'ofertas' %}" class="nav-link">OFERTAS</a></li>
+                    <!-- AGREGADO: SOPORTE EN NAVEGACIÓN PRINCIPAL -->
                     <li class="nav-item"><a href="{% url 'contacto' %}" class="nav-link">CONTACTO</a></li>
                 </ul>
             </div>
@@ -153,6 +159,8 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <h5>AYUDA</h5>
                     <ul class="footer-links">
+                        <!-- AGREGADO: CHAT DE SOPORTE EN EL FOOTER -->
+                        <li><a href="{% url 'chat' %}">Chat de Soporte</a></li>
                         <li><a href="{% url 'contacto' %}">Contacto</a></li>
                         <li><a href="#">Envíos</a></li>
                         <li><a href="#">Cambios</a></li>
@@ -197,8 +205,7 @@
     <script src="{% static 'js/utils.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'js/sorting.js' %}"></script>
-    <script src="{% static 'js/cart-manager.js' %}"></script>
-    <script src="{% static 'js/cart-simple.js' %}"></script>
+    <script src="{% static 'js/cart.js' %}"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
