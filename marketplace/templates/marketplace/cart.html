@@ -47,10 +47,10 @@
                                 {% csrf_token %}
                                 <div class="input-group input-group-sm">
                                     <button type="button" class="btn btn-outline-secondary quantity-btn" data-action="decrease">-</button>
-                                    <input type="number" name="quantity" 
-                                           value="{% if item.quantity > item.product.stock %}{{ item.product.stock }}{% else %}{{ item.quantity }}{% endif %}" 
-                                           min="1" max="{{ item.product.stock }}" 
-                                           class="form-control text-center quantity-input">
+                                        <input type="text" name="quantity" 
+                                            value="{% if item.quantity > item.product.stock %}{{ item.product.stock }}{% else %}{{ item.quantity }}{% endif %}" 
+                                            class="form-control text-center quantity-input"
+                                            pattern="[0-9]*" inputmode="numeric">
                                     <button type="button" class="btn btn-outline-secondary quantity-btn" data-action="increase">+</button>
                                 </div>
                             </form>
@@ -137,3 +137,4 @@
     {% endif %}
 </div>
 {% endblock %}
+
