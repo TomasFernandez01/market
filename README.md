@@ -1,4 +1,4 @@
-# 🛒 MasivoTech - Tienda de Computadoras
+#  MasivoTech - Tienda de Computadoras
 
 <div align="center">
 
@@ -21,7 +21,7 @@ MasivoTech es una aplicación web desarrollada en Django que funciona como una t
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin: 20px 0;">
 
 <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db;">
-<h4>🛒 Carrito de Compras</h4>
+<h4> Carrito de Compras</h4>
 <p>Sistema completo de carrito de compras con integración de Mercado Pago para procesar pagos de forma segura.</p>
 </div>
 
@@ -93,7 +93,7 @@ MERCADOPAGO_ACCESS_TOKEN=tu_access_token
 ```
 La aplicación estará disponible en: http://127.0.0.1:8000
 
-🛠 Tecnologías
+ Tecnologías
 <div align="center">
 Backend: Django · Python · SQLite
 Frontend: HTML · CSS · JavaScript · Bootstrap
@@ -101,7 +101,7 @@ APIs: Mercado Pago · Gemini AI · OAuth 2.0
 Herramientas: Git · Virtualenv · Pip
 </div>
 
-## 📁 Estructura del Proyecto
+##  Estructura del Proyecto
 
 **MARKET/**
 - `marketplace/` - Aplicación principal
