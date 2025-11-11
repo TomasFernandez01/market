@@ -14,7 +14,7 @@
 
 ## Descripción
 
-TechMarket es una aplicación web desarrollada en Django que funciona como una tienda online especializada en productos de computación. Los usuarios pueden explorar, buscar y comprar productos tecnológicos con un sistema de pago integrado con Mercado Pago.
+MasivoTech es una aplicación web desarrollada en Django que funciona como una tienda online especializada en productos de computación. Los usuarios pueden explorar, buscar y comprar productos tecnológicos con un sistema de pago integrado con Mercado Pago.
 
 ## Características
 
