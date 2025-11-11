@@ -1,23 +1,33 @@
+# === settings.py - Configuración Django Optimizada ===
+
 import os
 from pathlib import Path
-#---------------------------------------------
-# Cargar variables d entorno
-
 from dotenv import load_dotenv
-load_dotenv()
-#---------------------------------------------
 
+# Cargar variables de entorno
+load_dotenv()
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-#------------------------------------------------------------------------------------
-# para funcionalidad de registro con google
-SECRET_KEY = os.getenv('SECRET_KEY','django-insecure-clave-temporal-para-desarrollo')
-DEBUG = os.getenv('DEBUF','True').lower()=='true'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOST','localhost,127.0.0.1').split(',')
-#------------------------------------------------------------------------------------
+# =============================================================================
+# CONFIGURACIÓN DE SEGURIDAD
+# =============================================================================
 
-#------------------------------------------------------------------------------------
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-clave-temporal-para-desarrollo')
+
+# Seguridad: DEBUG debe ser False en producción
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
+
+# Hosts permitidos - importante para seguridad
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
+# =============================================================================
+# CONFIGURACIÓN DE LA APLICACIÓN
+# =============================================================================
+
 INSTALLED_APPS = [
+    # Apps de Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -25,85 +35,123 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-
-    'marketplace',
-    'users',
     
+    # Apps de terceros
     'crispy_forms',
     'crispy_bootstrap5',
-    'chat',
     'corsheaders',
-    
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    # ver urls
     'django_extensions',
-        
+    
+    # Apps locales
+    'marketplace',
+    'users',
+    'chat',
 ]
+
 MIDDLEWARE = [
+    # Middleware de CORS (primero)
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    
+    # Middleware de seguridad
     'django.middleware.security.SecurityMiddleware',
+    
+    # Middleware de sesión
     'django.contrib.sessions.middleware.SessionMiddleware',
+    
+    # Middleware común
     'django.middleware.common.CommonMiddleware',
+    
+    # Middleware CSRF
     'django.middleware.csrf.CsrfViewMiddleware',
+    
+    # Middleware de autenticación
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    
+    # Middleware de mensajes
     'django.contrib.messages.middleware.MessageMiddleware',
+    
+    # Middleware de clickjacking
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # tomi middle    
+    
+    # Middleware de Allauth
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-# tomi auth
+ROOT_URLCONF = 'masivo_tech.urls'
+
+WSGI_APPLICATION = 'masivo_tech.wsgi.application'
+
+# =============================================================================
+# CONFIGURACIÓN DE BASE DE DATOS
+# =============================================================================
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+# =============================================================================
+# CONFIGURACIÓN DE AUTENTICACIÓN
+# =============================================================================
+
+# Backends de autenticación
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+# Modelo de usuario personalizado
 AUTH_USER_MODEL = 'users.CustomUser'
-#tomi Allauth Configuration
+
+# Configuración de Allauth
 SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_LOGOUT_ON_GET = True
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-# Allauth Configuration ACTUALIZADA:
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_EMAIL_REQUIRED = False
+SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_STORE_TOKENS = True
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
+
+# Configuración de registro
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 
-# Crispy Forms
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+# =============================================================================
+# CONFIGURACIÓN DE INTERNATIONALIZATION
+# =============================================================================
 
-# Email Configuration (para recuperación de contraseña)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Para desarrollo
-# Para producción:
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+LANGUAGE_CODE = 'es-ar'
+TIME_ZONE = 'America/Argentina/Buenos_Aires'
+USE_I18N = True
+USE_TZ = True
 
-# Google OAuth (usa variables de entorno en producción)
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'APP': {
-            'client_id': os.getenv('GOOGLE_CLIENT_ID',''), 
-            'secret': os.getenv('GOOGLE_CLIENT_SECRET', ''),    
-            'key': ''
-        }
-    }
-}
+# =============================================================================
+# CONFIGURACIÓN DE ARCHIVOS ESTÁTICOS Y MEDIA
+# =============================================================================
 
+# Archivos estáticos
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-#----------------------------------------------------------------------------
+# Archivos media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
-ROOT_URLCONF = 'masivo_tech.urls'
+# =============================================================================
+# CONFIGURACIÓN DE TEMPLATES
+# =============================================================================
 
 TEMPLATES = [
     {
@@ -122,15 +170,54 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'masivo_tech.wsgi.application'
+# =============================================================================
+# CONFIGURACIÓN DE CRISPY FORMS
+# =============================================================================
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# =============================================================================
+# CONFIGURACIÓN DE CARRITO
+# =============================================================================
+
+CART_SESSION_ID = 'cart'
+
+# =============================================================================
+# CONFIGURACIÓN DE APIs EXTERNAS
+# =============================================================================
+
+# Google Gemini AI
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+
+
+# Mercado Pago - CONFIGURACIÓN BÁSICA
+MERCADOPAGO_ACCESS_TOKEN = 'APP_USR-4107629571667346-110823-c8e8df769239a534002daf4df00bd862-2977404630'
+MERCADOPAGO_PUBLIC_KEY = 'APP_USR-cc38148a-7263-4d54-b049-512277e179fa'
+
+# Google OAuth
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID',''), 
+            'secret': os.getenv('GOOGLE_SECRET', ''),    
+            'key': ''
+        }
     }
 }
+SOCIALACCOUNT_ADAPTER = 'users.adapters.CustomSocialAccountAdapter'
+# =============================================================================
+# CONFIGURACIÓN DE SEGURIDAD ADICIONAL
+# =============================================================================
 
+# Validadores de contraseña
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -145,41 +232,16 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-LANGUAGE_CODE = 'es-ar'
-TIME_ZONE = 'America/Argentina/Buenos_Aires'
-USE_I18N = True
-USE_TZ = True
 
-# ARCHIVOS ESTÁTICOS - CONFIGURACIÓN CORRECTA
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Crispy Forms
-CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
-CRISPY_TEMPLATE_PACK = 'bootstrap5'
-
-# Carrito
-CART_SESSION_ID = 'cart'
-
-# Agregar al final de settings.py
-ADMIN_DASHBOARD = True
-
-# Configuración de templates del admin
-if ADMIN_DASHBOARD:
-    import os
-    TEMPLATES[0]['DIRS'] = [os.path.join(BASE_DIR, 'templates')]
-
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-
-#q onda jaja aca va lo de mercado pago 
-
+# Configuración de CORS
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
+# URL base para callbacks
 BASE_URL = 'http://127.0.0.1:8000'
+
+# Configuración del admin dashboard
+ADMIN_DASHBOARD = True
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
