@@ -12,8 +12,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #------------------------------------------------------------------------------------
 # para funcionalidad de registro con google
 SECRET_KEY = os.getenv('SECRET_KEY','django-insecure-clave-temporal-para-desarrollo')
-DEBUG = os.getenv('DEBUF','True').lower()=='true'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOST','localhost,127.0.0.1').split(',')
+DEBUG = os.getenv('DEBUG','True').lower()=='true'
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS','localhost,127.0.0.1').split(',')
 #------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------
@@ -62,6 +62,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 AUTH_USER_MODEL = 'users.CustomUser'
+
 #tomi Allauth Configuration
 SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
@@ -94,12 +95,12 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         'APP': {
             'client_id': os.getenv('GOOGLE_CLIENT_ID',''), 
-            'secret': os.getenv('GOOGLE_CLIENT_SECRET', ''),    
+            'secret': os.getenv('GOOGLE_SECRET', ''),    
             'key': ''
         }
     }
 }
-
+SOCIALACCOUNT_ADAPTER = 'users.adapters.CustomSocialAccountAdapter'
 
 #----------------------------------------------------------------------------
 
@@ -183,3 +184,5 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 BASE_URL = 'http://127.0.0.1:8000'
+
+# Solucion al error de registro con login de google(tercero)
