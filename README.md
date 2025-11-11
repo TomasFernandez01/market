@@ -101,16 +101,17 @@ APIs: Mercado Pago · Gemini AI · OAuth 2.0
 Herramientas: Git · Virtualenv · Pip
 </div>
 
-Estructura del Proyecto
-MARKET/
-├── marketplace/          # Aplicación principal
-├── users/               # Gestión de usuarios
-├── templates/           # Plantillas HTML
-├── static/             # Archivos estáticos
-├── venv/               # Entorno virtual
-├── manage.py           # Utilidad de Django
-├── requirements.txt    # Dependencias
-└── .env               # Variables de entorno
+## 📁 Estructura del Proyecto
+
+**MARKET/**
+- `marketplace/` - Aplicación principal
+- `users/` - Gestión de usuarios  
+- `templates/` - Plantillas HTML
+- `static/` - Archivos estáticos
+- `venv/` - Entorno virtual
+- `manage.py` - Utilidad de Django
+- `requirements.txt` - Dependencias
+- `.env` - Variables de entorno
 
 Funcionalidades Adicionales
 Scraping de productos de Mercado Libre
