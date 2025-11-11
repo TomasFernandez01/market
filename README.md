@@ -127,5 +127,5 @@ Gestión de perfil de usuario
 Historial de pedidos
 
 <div align="center">
-MASIVOTECH - Proyecto Django © 2024
+MASIVOTECH - Proyecto Django © 2025
 </div>
