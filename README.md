@@ -104,7 +104,7 @@ Herramientas: Git · Virtualenv · Pip
 ##  Estructura del Proyecto
 
 **MARKET/**
-- `marketplace/` - Aplicación principal
+- `masivo_tech/` - Aplicación principal
 - `users/` - Gestión de usuarios  
 - `templates/` - Plantillas HTML
 - `static/` - Archivos estáticos
