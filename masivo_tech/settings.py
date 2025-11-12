@@ -18,12 +18,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-clave-temporal-para-desarrollo')
 
 # Seguridad: DEBUG debe ser False en producción
-DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
+"""error de Burraso mal 
 
-# Hosts permitidos - importante para seguridad
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
-# No vaa estar en local por ende == *
-# ANTES -> os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1') <-No va estar local==> *
+    DEBUG = os.getenv('DEBUG', 'True').lower() == 'true' ->Desarrollo
+    DEBUG = os.getenv('DEBUG', 'False').lower() == 'true' ->Produccion
+
+    Hosts permitidos - importante para seguridad
+    
+    ALLOWED_HOSTS=
+
+    ANTES 
+    -> os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')  <-
+        No va estar local   -->             *
+    AHORA
+    ->  os.getenv('ALLOWED_HOSTS', '*').split(',') 
+"""
+
+# Solucionado 
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'masivotech.onrender.com,localhost,127.0.0.1').split(',')
+
 
 # =============================================================================
 # CONFIGURACIÓN DE LA APLICACIÓN
