@@ -1,11 +1,27 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, login
 from django.contrib.auth.forms import PasswordChangeForm
-from .forms import UserUpdateForm, ProfileUpdateForm
+from .forms import UserUpdateForm, ProfileUpdateForm , SimpleRegistrationForm
 from .models import CustomUser
 from marketplace.models import Order  # ← AGREGAR ESTA IMPORTACIÓN
+
+# ← AGREGAR ESTA VISTA NUEVA PARA REGISTRO
+def register(request):
+    """Vista para registro fácil de usuarios"""
+    if request.method == 'POST':
+        form = SimpleRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Auto-login después del registro
+            login(request, user)
+            messages.success(request, '¡Cuenta creada exitosamente!')
+            return redirect('profile')  # O la página que quieras
+    else:
+        form = SimpleRegistrationForm()
+    
+    return render(request, 'users/register.html', {'form': form})
 
 @login_required
 def profile(request):

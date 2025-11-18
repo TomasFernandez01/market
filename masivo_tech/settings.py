@@ -25,13 +25,6 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-# cloudinary.config( 
-#     cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
-#     api_key=os.getenv('CLOUDINARY_API_KEY'), 
-#     api_secret=os.getenv('CLOUDINARY_API_SECRET')
-# )
-# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,27 +34,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-clave-temporal-para-desarrollo')
 
-# Seguridad: DEBUG debe ser False en producción
-"""error de Burraso mal 
-
-    DEBUG = os.getenv('DEBUG', 'True').lower() == 'true' ->Desarrollo
-    DEBUG = os.getenv('DEBUG', 'False').lower() == 'true' ->Produccion
-
-    Hosts permitidos - importante para seguridad
-    
-    ALLOWED_HOSTS=
-
-    ANTES 
-    -> os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')  <-
-        No va estar local   -->             *
-    AHORA
-    ->  os.getenv('ALLOWED_HOSTS', '*').split(',') 
-"""
-
 # Solucionado 
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'masivotech.onrender.com,localhost,127.0.0.1').split(',')
-
 
 # =============================================================================
 # CONFIGURACIÓN DE LA APLICACIÓN
@@ -75,7 +50,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
 
     #Cloudinary
     'cloudinary',
@@ -85,10 +59,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'corsheaders',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
     'django_extensions',
     
     # Apps locales
@@ -124,9 +94,6 @@ MIDDLEWARE = [
     
     # Middleware de clickjacking
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
-    # Middleware de Allauth
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'masivo_tech.urls'
@@ -148,48 +115,29 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 if DATABASE_URL:
     DATABASES['default'] = dj_database_url.parse(DATABASE_URL)
 
-
 # =============================================================================
 # CONFIGURACIÓN DE AUTENTICACIÓN
 # =============================================================================
 
-# Backends de autenticación
+# Solo el backend básico de Django
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 # Modelo de usuario personalizado
 AUTH_USER_MODEL = 'users.CustomUser'
 
-# Configuración de Allauth
-SITE_ID = 1
+# Configuración básica de login
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_LOGOUT_ON_GET = True
-SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
-SOCIALACCOUNT_EMAIL_REQUIRED = False
-SOCIALACCOUNT_QUERY_EMAIL = True
-SOCIALACCOUNT_AUTO_SIGNUP = True
-SOCIALACCOUNT_STORE_TOKENS = True
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
-
-# Configuración de registro
-ACCOUNT_LOGIN_METHODS = {'email'}
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+LOGIN_URL = '/accounts/login/'
 
 # =============================================================================
 # CONFIGURACIÓN DE EMAIL (DESACTIVADO PARA RENDER)
 # =============================================================================
 
-# Evita que Django intente conectarse a un servidor SMTP real.
-# Los mails se imprimirán en la consola de Render en los logs.
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "no-reply@masivotech.com"
-
 
 # =============================================================================
 # CONFIGURACIÓN DE INTERNATIONALIZATION
@@ -210,26 +158,6 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 # --> RENDER <--
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Archivos media
-#MEDIA_URL = '/media/'
-#MEDIA_ROOT = BASE_DIR / 'media'
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# =============================================================================
-# CONFIGURACION PARA CLOUDINARY
-# =============================================================================
-
-# cloudinary.config( 
-#   cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
-#   api_key=os.getenv('CLOUDINARY_API_KEY'), 
-#   api_secret=os.getenv('CLOUDINARY_API_SECRET')
-# )
-# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-# =============================================================================
-# CONFIGURACION PARA CLOUDINARY - DEBUG
-# =============================================================================
 
 # =============================================================================
 # CONFIGURACIÓN DE TEMPLATES
@@ -271,30 +199,11 @@ CART_SESSION_ID = 'cart'
 
 # Google Gemini AI
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-# Mercado Pago - CONFIGURACIÓN BÁSICA
 
-
+# Mercado Pago
 MERCADOPAGO_ACCESS_TOKEN = os.getenv('MERCADOPAGO_ACCESS_TOKEN')
 MERCADOPAGO_PUBLIC_KEY = os.getenv('MERCADOPAGO_PUBLIC_KEY')
 
-# Google OAuth
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'APP': {
-            'client_id': os.getenv('GOOGLE_CLIENT_ID',''), 
-            'secret': os.getenv('GOOGLE_SECRET', ''),    
-            'key': ''
-        }
-    }
-}
-SOCIALACCOUNT_ADAPTER = 'users.adapters.CustomSocialAccountAdapter'
 # =============================================================================
 # CONFIGURACIÓN DE SEGURIDAD ADICIONAL
 # =============================================================================
@@ -320,7 +229,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 # URL base para callbacks
-#BASE_URL = 'http://127.0.0.1:8000'
 BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8000") # <-- render
 
 # Configuración del admin dashboard
